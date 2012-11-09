@@ -120,11 +120,13 @@ public class Lexer {
                 return chkOpt('=', Token.assignTok,
                                    Token.eqeqTok);
             
-            case '<': ch= nextChar();
-                return Token.ltTok;
+            case '<': 
+					return chkOpt ('=', Token.ltTok,
+										Token.lteqTok);
 
-            case '>': ch= nextChar();
-                return Token.gtTok;
+            case '>': 
+					return chkOpt ('=', Token.ltTok,
+										Token.gteqTok);
 
             case '!': ch = nextChar();
                 return Token.notTok;
