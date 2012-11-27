@@ -37,14 +37,17 @@ public class Parser {
   
     public Program program() {
         // Program --> void main ( ) '{' Declarations Statements '}'
-        TokenType[ ] header = {TokenType.Int, TokenType.Main,
+ 	Program p = null;
+ 	TokenType[ ] header = {TokenType.Int, TokenType.Main,
                           TokenType.LeftParen, TokenType.RightParen};
         for (int i=0; i<header.length; i++)   // bypass "int main ( )"
             match(header[i]);
         match(TokenType.LeftBrace);
         // student exercise
+        Declaration d = null;
+        Block b = statements();
         match(TokenType.RightBrace);
-        return null;  // student exercise
+        return new Program(d,b) ;  // student exercise
     }
   
     private Declarations declarations () {
