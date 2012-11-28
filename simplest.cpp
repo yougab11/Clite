@@ -1,1 +1,1 @@
-int main () { a }
+int main () {a = 5; }

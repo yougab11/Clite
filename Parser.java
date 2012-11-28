@@ -81,11 +81,21 @@ public class Parser {
     private Statement statement() {
         // Statement --> ; | Block | Assignment | IfStatement | WhileStatement
 //something like this... not sure if its tokenType or maybe something else
-	//switch (TokenType)
+	Statement s = null;	
+	if (token.type().equals(TokenType.Semicolon)){
 	//case ';':       
-	 Statement s = new Skip();
+	 s = new Skip();}
+	else if (token.type().equals(TokenType.Identifier)){
 	//case 'Identifier':
-	//Statement s = new Assignment();
+	
+	s = assignment(); 	
+	}
+/*	
+	else if (token.type().equals(TokenType.If)){
+	}
+	else if (token.type().equals(TokenType.While)){
+	}	
+*/
         // student exercise
         return s;
     }
@@ -93,8 +103,11 @@ public class Parser {
     private Block statements () {
         // Block --> '{' Statements '}'
 	// while (members.hasNext()){}
-	match(TokenType.Identifier);
+	
         Block b = new Block();
+	while (token.type().equals(TokenType.Identifier)){
+	b.members.add(statement());
+	}
         // student exercise
         return b;
     }
@@ -102,7 +115,15 @@ public class Parser {
     private Assignment assignment () {
         // Assignment --> Identifier = Expression ;
 	
-        return null; //Assignment;  // student exercise
+	//System.out.println(token.value());
+	Variable var = new Variable (match(TokenType.Identifier));
+	
+	match(TokenType.Assign);
+	
+	Expression e = expression();
+	
+        match(TokenType.Semicolon);
+	return new Assignment (var, e); //Assignment;  // student exercise
     }
   
     private Conditional ifStatement () {
@@ -117,22 +138,24 @@ public class Parser {
 
     private Expression expression () {
         // Expression --> Conjunction { || Conjunction }
-        return null;  // student exercise
+	
+        return (conjunction());  // student exercise
     }
   
     private Expression conjunction () {
         // Conjunction --> Equality { && Equality }
-        return null;  // student exercise
+        return (equality());  // student exercise
     }
   
     private Expression equality () {
+
         // Equality --> Relation [ EquOp Relation ]
-        return null;  // student exercise
+        return (relation());  // student exercise
     }
 
     private Expression relation (){
         // Relation --> Addition [RelOp Addition] 
-        return null;  // student exercise
+        return (addition());  // student exercise
     }
   
     private Expression addition () {
@@ -190,7 +213,14 @@ public class Parser {
     }
 
     private Value literal( ) {
-        return null;  // student exercise
+	Value v = null;
+	if (token.type().equals(TokenType.IntLiteral)){
+	
+	int myVal = Integer.parseInt(token.value());	
+	match(TokenType.IntLiteral);
+	v = new IntValue (myVal);
+	}
+        return v;  // student exercise
     }
   
 
