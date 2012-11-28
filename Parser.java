@@ -37,27 +37,38 @@ public class Parser {
   
     public Program program() {
         // Program --> void main ( ) '{' Declarations Statements '}'
- 	Program p = null;
+ 	
  	TokenType[ ] header = {TokenType.Int, TokenType.Main,
                           TokenType.LeftParen, TokenType.RightParen};
         for (int i=0; i<header.length; i++)   // bypass "int main ( )"
             match(header[i]);
+	//end of program header
+
         match(TokenType.LeftBrace);
-        // student exercise
-        Declaration d = null;
-        Block b = statements();
+        	Declarations d = null;
+        	Block b = statements();
         match(TokenType.RightBrace);
-        return new Program(d,b) ;  // student exercise
+	Program p = new Program(d,b);
+        return p ;  // student exercise
     }
   
     private Declarations declarations () {
         // Declarations --> { Declaration }
-        return null;  // student exercise
+	
+        return new Declarations();  // student exercise
     }
   
     private void declaration (Declarations ds) {
         // Declaration  --> Type Identifier { , Identifier } ;
-        // student exercise
+//run While loop
+//Type t = ds.type();
+	/*
+	while (TokenType isComma)
+		{
+		Identifier a = type t;
+		}
+	*/
+	// student exercise
     }
   
     private Type type () {
@@ -69,13 +80,20 @@ public class Parser {
   
     private Statement statement() {
         // Statement --> ; | Block | Assignment | IfStatement | WhileStatement
-        Statement s = new Skip();
+//something like this... not sure if its tokenType or maybe something else
+	//switch (TokenType)
+	//case ';':       
+	 Statement s = new Skip();
+	//case 'Identifier':
+	//Statement s = new Assignment();
         // student exercise
         return s;
     }
   
     private Block statements () {
         // Block --> '{' Statements '}'
+	// while (members.hasNext()){}
+	match(TokenType.Identifier);
         Block b = new Block();
         // student exercise
         return b;
@@ -83,7 +101,8 @@ public class Parser {
   
     private Assignment assignment () {
         // Assignment --> Identifier = Expression ;
-        return null;  // student exercise
+	
+        return null; //Assignment;  // student exercise
     }
   
     private Conditional ifStatement () {
