@@ -13,7 +13,7 @@ class Program {
         body = b;
     }
 	
-	void display(){
+	public void display(){
 		System.out.println ("abstract syntax display");
 	}
 
@@ -53,17 +53,23 @@ class Type {
 
 abstract class Statement {
     // Statement = Skip | Block | Assignment | Conditional | Loop
-
+	abstract void display();
 }
 
 class Skip extends Statement {
+	void display(){
+		System.out.println ("skip display");
+	}
 }
 
 class Block extends Statement {
     // Block = Statement*
     //         (a Vector of members)
     public ArrayList<Statement> members = new ArrayList<Statement>();
-
+	 
+	void display(){
+		System.out.println ("block display");
+	}
 }
 
 class Assignment extends Statement {
@@ -75,7 +81,10 @@ class Assignment extends Statement {
         target = t;
         source = e;
     }
-
+	
+	void display(){
+		System.out.println ("Assignment display");
+	}
 }
 
 class Conditional extends Statement {
@@ -91,7 +100,9 @@ class Conditional extends Statement {
     Conditional (Expression t, Statement tp, Statement ep) {
         test = t; thenbranch = tp; elsebranch = ep;
     }
-    
+    	void display(){
+		System.out.println ("Conditional display");
+	}
 }
 
 class Loop extends Statement {
@@ -102,12 +113,14 @@ class Loop extends Statement {
     Loop (Expression t, Statement b) {
         test = t; body = b;
     }
-    
+    	void display(){
+		System.out.println ("Loop display");
+	}
 }
 
 abstract class Expression {
     // Expression = Variable | Value | Binary | Unary
-
+	abstract void display();
 }
 
 class Variable extends Expression {
@@ -125,6 +138,10 @@ class Variable extends Expression {
     
     public int hashCode ( ) { return id.hashCode( ); }
 
+	void display(){
+		System.out.println ("Expression display");
+	}
+
 }
 
 abstract class Value extends Expression {
@@ -137,7 +154,7 @@ abstract class Value extends Expression {
         assert false : "should never reach here";
         return 0;
     }
-    
+   
     boolean boolValue ( ) {
         assert false : "should never reach here";
         return false;
@@ -164,6 +181,10 @@ abstract class Value extends Expression {
         if (type == Type.FLOAT) return new FloatValue( );
         throw new IllegalArgumentException("Illegal type in mkValue");
     }
+
+	 void display(){
+		System.out.println ("display value");
+	}
 }
 
 class IntValue extends Value {
@@ -182,7 +203,9 @@ class IntValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-
+	public void display(){
+		System.out.println ("display Intvalue");
+	}
 }
 
 class BoolValue extends Value {
@@ -206,7 +229,9 @@ class BoolValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-
+	void display(){
+		System.out.println ("BoolVal display");
+	}
 }
 
 class CharValue extends Value {
@@ -225,7 +250,9 @@ class CharValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-
+	void display(){
+		System.out.println ("CharVal display");
+	}
 }
 
 class FloatValue extends Value {
@@ -244,7 +271,9 @@ class FloatValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-
+	void display(){
+		System.out.println ("FloatValue display");
+	}
 }
 
 class Binary extends Expression {
@@ -255,7 +284,9 @@ class Binary extends Expression {
     Binary (Operator o, Expression l, Expression r) {
         op = o; term1 = l; term2 = r;
     } // binary
-
+	void display(){
+		System.out.println ("Binary display");
+	}
 }
 
 class Unary extends Expression {
@@ -266,6 +297,9 @@ class Unary extends Expression {
     Unary (Operator o, Expression e) {
         op = o; term = e;
     } // unary
+	void display(){
+		System.out.println ("Uniary display");
+	}
 
 }
 
