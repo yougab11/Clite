@@ -1,4 +1,6 @@
 int main () {
-int f,c; bool g,e;
+int d , c; 
+int f , g;
 a = 5;
+f + 5;
  }

@@ -54,10 +54,37 @@ public class Parser {
   
     private Declarations declarations () {
         // Declarations --> { Declaration }
+	Declarations ds = new Declarations();
+	while ( checkType())
+	{
+	Type t = type(token);
+	//have to change this so it matches multiple types	
+	match(TokenType.Int);
+	Variable v = new Variable (match(TokenType.Identifier));
+	ds.add(new Declaration(v,t));
+	while(token.type().equals(TokenType.Comma))
+		{
+		match(TokenType.Comma);
+		Variable v2 = new Variable (match(TokenType.Identifier));
+		Declaration d = new Declaration (v2,t);
+		ds.add(d);	
+		}
+	match(TokenType.Semicolon);
 	
-        return new Declarations();  // student exercise
+	}
+        return ds;  // student exercise
     }
   
+private boolean checkType(){
+	if  (token.type().equals(TokenType.Int)  ||
+		token.type().equals(TokenType.Bool) ||
+		token.type().equals(TokenType.Char) ||
+		token.type().equals(TokenType.Float))	
+	return true;
+	else
+	return false;
+	}
+
     private void declaration (Declarations ds) {
         // Declaration  --> Type Identifier { , Identifier } ;
 //run While loop
@@ -71,12 +98,12 @@ public class Parser {
 	// student exercise
     }
   
-    private Type type () {
+    private Type type (Token s) {
         // Type  -->  int | bool | float | char 
         Type t = null;
-	/*if(token.type().equals(TokenType.Int)){
-	t = new Type("INT"); 	
-	}*/
+	if(s.type().equals(TokenType.Int)){
+	t = Type.INT; 	
+	}
         // student exercise
         return t;          
     }
@@ -138,24 +165,47 @@ public class Parser {
 
     private Expression expression () {
         // Expression --> Conjunction { || Conjunction }
-	
-        return (conjunction());  // student exercise
+	Expression e = conjunction();
+	while (token.type().equals(TokenType.Or)){
+		Operator op = new Operator (match(token.type()));
+		Expression con2 = conjunction();
+		e = new Binary(op , e , con2);	
+	}
+	return e;  // student exercise
     }
   
     private Expression conjunction () {
         // Conjunction --> Equality { && Equality }
-        return (equality());  // student exercise
+	Expression e = equality();
+	while (token.type().equals(TokenType.And)){
+		Operator op = new Operator (match(token.type()));
+		Expression equ2 = equality();
+		e = new Binary(op , e , equ2);	
+	}
+        return e;  // student exercise
     }
   
     private Expression equality () {
 
         // Equality --> Relation [ EquOp Relation ]
-        return (relation());  // student exercise
+	Expression e = relation();
+	while (isEqualityOp()){
+		Operator op = new Operator (match(token.type()));
+		Expression rel2 = relation();
+		e = new Binary(op , e , rel2);	
+	}
+        return e;  // student exercise
     }
 
     private Expression relation (){
+	Expression e = addition();
+	while (isRelationalOp()){
+		Operator op = new Operator (match(token.type()));
+		Expression add2 = addition();
+		e = new Binary(op , e , add2);	
+	}
         // Relation --> Addition [RelOp Addition] 
-        return (addition());  // student exercise
+        return e;  // student exercise
     }
   
     private Expression addition () {
@@ -214,6 +264,7 @@ public class Parser {
 
     private Value literal( ) {
 	Value v = null;
+//finished for ints
 	if (token.type().equals(TokenType.IntLiteral)){
 	
 	int myVal = Integer.parseInt(token.value());	

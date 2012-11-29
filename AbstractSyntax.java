@@ -15,6 +15,16 @@ class Program {
 	
 	public void display(){
 		System.out.println ("abstract syntax display");
+//declaration printer
+		//decpart.display(1);
+		Iterator dec =decpart.iterator();		
+		//decpart.display();		
+		while (dec.hasNext())
+		{
+		Declaration currentDec = (Declaration)dec.next();
+		currentDec.display();
+		}
+//body printer
 		Iterator bodacious =body.members.iterator();		
 		body.display();		
 		while (bodacious.hasNext())
@@ -30,7 +40,9 @@ class Program {
 class Declarations extends ArrayList<Declaration> {
     // Declarations = Declaration*
     // (a list of declarations d1, d2, ..., dn)
-
+		void display(){
+			System.out.println("declaration display");
+		};
 }
 
 class Declaration {
@@ -41,8 +53,9 @@ class Declaration {
     Declaration (Variable var, Type type) {
         v = var; t = type;
     } // declaration */
-
-}
+	void display(){
+		System.out.println("Declarations : <" + v + ", " + t + ">" );
+		}
 
 class Type {
     // Type = int | bool | char | float 
@@ -155,7 +168,7 @@ class Variable extends Expression {
     public int hashCode ( ) { return id.hashCode( ); }
 
 	void display(){
-		System.out.println ("Expression display");
+		System.out.println ("Variable display");
 	}
 
 }
