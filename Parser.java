@@ -45,7 +45,7 @@ public class Parser {
 	//end of program header
 
         match(TokenType.LeftBrace);
-        	Declarations d = null;
+        	Declarations d = declarations();
         	Block b = statements();
         match(TokenType.RightBrace);
 	Program p = new Program(d,b);
@@ -74,6 +74,9 @@ public class Parser {
     private Type type () {
         // Type  -->  int | bool | float | char 
         Type t = null;
+	/*if(token.type().equals(TokenType.Int)){
+	t = new Type("INT"); 	
+	}*/
         // student exercise
         return t;          
     }
@@ -117,11 +120,8 @@ public class Parser {
 	
 	//System.out.println(token.value());
 	Variable var = new Variable (match(TokenType.Identifier));
-	
 	match(TokenType.Assign);
-	
 	Expression e = expression();
-	
         match(TokenType.Semicolon);
 	return new Assignment (var, e); //Assignment;  // student exercise
     }
