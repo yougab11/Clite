@@ -15,6 +15,14 @@ class Program {
 	
 	public void display(){
 		System.out.println ("abstract syntax display");
+		Iterator bodacious =body.members.iterator();		
+		body.display();		
+		while (bodacious.hasNext())
+		{
+		Statement currentStatement = (Statement)bodacious.next();
+		currentStatement.display(1);
+		//bodacious.next();
+		}
 	}
 
 }
@@ -53,7 +61,10 @@ class Type {
 
 abstract class Statement {
     // Statement = Skip | Block | Assignment | Conditional | Loop
-	abstract void display();
+	void display(int level){
+		for(int i = 0; i<level; i++)
+			System.out.print(" ");
+	};
 }
 
 class Skip extends Statement {
@@ -82,8 +93,13 @@ class Assignment extends Statement {
         source = e;
     }
 	
-	void display(){
-		System.out.println ("Assignment display");
+	void display(int level){
+		super.display(level);
+		System.out.println("Assignment display");
+		super.display(level);
+		System.out.println("target: " + target);
+		super.display(level);
+		System.out.println ("source: " + source);	
 	}
 }
 
