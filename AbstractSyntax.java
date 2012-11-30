@@ -16,9 +16,7 @@ class Program {
 	public void display(){
 		System.out.println ("abstract syntax display");
 //declaration printer
-		//decpart.display(1);
 		Iterator dec =decpart.iterator();		
-		//decpart.display();		
 		while (dec.hasNext())
 		{
 		Declaration currentDec = (Declaration)dec.next();
@@ -52,10 +50,11 @@ class Declaration {
 
     Declaration (Variable var, Type type) {
         v = var; t = type;
-    } // declaration */
+   } // declaration 
 	void display(){
 		System.out.println("Declarations : <" + v + ", " + t + ">" );
-		}
+		}	
+}
 
 class Type {
     // Type = int | bool | char | float 
@@ -77,7 +76,7 @@ abstract class Statement {
 	void display(int level){
 		for(int i = 0; i<level; i++)
 			System.out.print(" ");
-	};
+	}
 }
 
 class Skip extends Statement {
@@ -112,7 +111,7 @@ class Assignment extends Statement {
 		super.display(level);
 		System.out.println("target: " + target);
 		super.display(level);
-		System.out.println ("source: " + source);	
+		source.display(level);	
 	}
 }
 
@@ -149,7 +148,10 @@ class Loop extends Statement {
 
 abstract class Expression {
     // Expression = Variable | Value | Binary | Unary
-	abstract void display();
+	void display(int level){
+	 for(int i = 0; i<level; i++)
+			System.out.print(" ");
+	};
 }
 
 class Variable extends Expression {
@@ -211,8 +213,8 @@ abstract class Value extends Expression {
         throw new IllegalArgumentException("Illegal type in mkValue");
     }
 
-	 void display(){
-		System.out.println ("display value");
+	 void display(int level){
+		System.out.println (mkValue(type));
 	}
 }
 
@@ -313,8 +315,15 @@ class Binary extends Expression {
     Binary (Operator o, Expression l, Expression r) {
         op = o; term1 = l; term2 = r;
     } // binary
-	void display(){
-		System.out.println ("Binary display");
+	void display(int level){
+		super.display(level);
+		System.out.println("Binary display");
+		super.display(level+1);
+		System.out.println("operator: " + op);
+		super.display(level+1);
+		System.out.println ("term1: " + term1);
+		super.display(level+1);
+		System.out.println ("term2: " + term2);	
 	}
 }
 
@@ -327,7 +336,7 @@ class Unary extends Expression {
         op = o; term = e;
     } // unary
 	void display(){
-		System.out.println ("Uniary display");
+		System.out.println ("Unary display");
 	}
 
 }
@@ -340,7 +349,7 @@ class Operator {
     // RelationalOp = < | <= | == | != | >= | >
     final static String LT = "<";
     final static String LE = "<=";
-    final static String EQ = "==";
+    final static String EQ = "==";    
     final static String NE = "!=";
     final static String GT = ">";
     final static String GE = ">=";

@@ -57,6 +57,7 @@ public class Parser {
 	Declarations ds = new Declarations();
 	while ( checkType())
 	{
+//not exactly the fix they wanted but i will see if it gets me into trouble
 	Type t = type(token);
 	//have to change this so it matches multiple types	
 	match(TokenType.Int);
