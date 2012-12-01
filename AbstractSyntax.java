@@ -16,31 +16,30 @@ class Program {
 	public void display(){
 		System.out.println ("abstract syntax display");
 //declaration printer
-		Iterator dec =decpart.iterator();		
+		decpart.display(1);
+        /*Iterator dec =decpart.iterator();		
 		while (dec.hasNext())
 		{
 		Declaration currentDec = (Declaration)dec.next();
 		currentDec.display();
-		}
+		}*/
 //body printer
-		Iterator bodacious =body.members.iterator();		
-		body.display();		
-		while (bodacious.hasNext())
-		{
-		Statement currentStatement = (Statement)bodacious.next();
-		currentStatement.display(1);
-		//bodacious.next();
-		}
-	}
+		body.display(1);
+    }
 
 }
 
 class Declarations extends ArrayList<Declaration> {
     // Declarations = Declaration*
     // (a list of declarations d1, d2, ..., dn)
-		void display(){
-			System.out.println("declaration display");
-		};
+		void display(int level){
+		Iterator dec =iterator();     
+         while (dec.hasNext())
+            {
+            Declaration currentDec = (Declaration)dec.next();
+             currentDec.display();
+            }
+        }
 }
 
 class Declaration {
@@ -69,6 +68,10 @@ class Type {
     private Type (String t) { id = t; }
 
     public String toString ( ) { return id; }
+    /*void display (int level){
+        for(int i = 0; i<level; i++)
+            System.out.print(" ");        
+    }*/
 }
 
 abstract class Statement {
@@ -80,7 +83,8 @@ abstract class Statement {
 }
 
 class Skip extends Statement {
-	void display(){
+	void display(int level){
+        super.display(level);
 		System.out.println ("skip display");
 	}
 }
@@ -90,8 +94,15 @@ class Block extends Statement {
     //         (a Vector of members)
     public ArrayList<Statement> members = new ArrayList<Statement>();
 	 
-	void display(){
-		System.out.println ("block display");
+	void display(int level){
+		Iterator bodacious = members.iterator();      
+        System.out.println("block display");     
+        while (bodacious.hasNext())
+        {
+        Statement currentStatement = (Statement)bodacious.next();
+        currentStatement.display(1);
+        //bodacious.next();
+        }
 	}
 }
 
@@ -111,7 +122,10 @@ class Assignment extends Statement {
 		super.display(level);
 		System.out.println("target: " + target);
 		super.display(level);
-		source.display(level);	
+        //this code works for if the source is just a value
+        System.out.println("source: " + source);
+        //this code works if the source is an expression
+        //source.display(level);
 	}
 }
 
@@ -128,8 +142,17 @@ class Conditional extends Statement {
     Conditional (Expression t, Statement tp, Statement ep) {
         test = t; thenbranch = tp; elsebranch = ep;
     }
-    	void display(){
+    	void display(int level){
 		System.out.println ("Conditional display");
+        super.display(level);
+        System.out.println("test: " );
+         test.display(level +1);
+        super.display(level);
+        System.out.println ("then: ");
+         thenbranch.display(level + 1);
+        super.display(level);
+        System.out.println ("else: ");
+         elsebranch.display(level + 1);
 	}
 }
 
@@ -141,9 +164,16 @@ class Loop extends Statement {
     Loop (Expression t, Statement b) {
         test = t; body = b;
     }
-    	void display(){
-		System.out.println ("Loop display");
-	}
+    void display(int level){
+        System.out.println ("Loop display");
+        super.display(level);
+        System.out.println("test: " );
+         test.display(level +1);
+        super.display(level);
+        System.out.println ("body: ");
+         body.display(level + 1);
+       
+    }
 }
 
 abstract class Expression {
@@ -169,8 +199,9 @@ class Variable extends Expression {
     
     public int hashCode ( ) { return id.hashCode( ); }
 
-	void display(){
-		System.out.println ("Variable display");
+	void display(int level){
+        super.display(level);
+		System.out.println ("var: " + id);
 	}
 
 }
@@ -212,9 +243,10 @@ abstract class Value extends Expression {
         if (type == Type.FLOAT) return new FloatValue( );
         throw new IllegalArgumentException("Illegal type in mkValue");
     }
-
+//nothing good here need this to return a value i think... or something...
 	 void display(int level){
-		System.out.println (mkValue(type));
+        super.display(level);
+		System.out.println (type);
 	}
 }
 
@@ -234,9 +266,10 @@ class IntValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-	public void display(){
-		System.out.println ("display Intvalue");
-	}
+    // void display (int level){
+    //     System.out.println (value);
+    // }
+
 }
 
 class BoolValue extends Value {
@@ -260,9 +293,7 @@ class BoolValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-	void display(){
-		System.out.println ("BoolVal display");
-	}
+	
 }
 
 class CharValue extends Value {
@@ -281,9 +312,7 @@ class CharValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-	void display(){
-		System.out.println ("CharVal display");
-	}
+	
 }
 
 class FloatValue extends Value {
@@ -302,9 +331,7 @@ class FloatValue extends Value {
         if (undef)  return "undef";
         return "" + value;
     }
-	void display(){
-		System.out.println ("FloatValue display");
-	}
+	
 }
 
 class Binary extends Expression {

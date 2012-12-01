@@ -1,4 +1,4 @@
-import java.util.*;
+ import java.util.*;
 
 public class Parser {
     // Recursive descent parser that inputs a C++Lite program and 
@@ -60,7 +60,19 @@ public class Parser {
 //not exactly the fix they wanted but i will see if it gets me into trouble
 	Type t = type(token);
 	//have to change this so it matches multiple types	
-	match(TokenType.Int);
+   if (token.type().equals(TokenType.Int)){
+    match(TokenType.Int);
+   } 
+   else if (token.type().equals(TokenType.Bool)){
+    match(TokenType.Bool);
+   }
+   else if (token.type().equals(TokenType.Char)){
+    match(TokenType.Char);
+   }
+   else if (token.type().equals(TokenType.Float)){
+    match(TokenType.Float);
+   }
+	
 	Variable v = new Variable (match(TokenType.Identifier));
 	ds.add(new Declaration(v,t));
 	while(token.type().equals(TokenType.Comma))
@@ -105,6 +117,15 @@ private boolean checkType(){
 	if(s.type().equals(TokenType.Int)){
 	t = Type.INT; 	
 	}
+    else if(s.type().equals(TokenType.Bool)){
+    t = Type.BOOL;   
+    }
+    else if(s.type().equals(TokenType.Char)){
+    t = Type.CHAR;   
+    }
+    else if(s.type().equals(TokenType.Float)){
+    t = Type.FLOAT;   
+    }
         // student exercise
         return t;          
     }
@@ -114,19 +135,28 @@ private boolean checkType(){
 //something like this... not sure if its tokenType or maybe something else
 	Statement s = null;	
 	if (token.type().equals(TokenType.Semicolon)){
-	//case ';':       
+	//case ';':   
+     match(TokenType.Semicolon);    
 	 s = new Skip();}
 	else if (token.type().equals(TokenType.Identifier)){
 	//case 'Identifier':
 	
 	s = assignment(); 	
 	}
-/*	
+	//case 'if'
 	else if (token.type().equals(TokenType.If)){
+    s = ifStatement();
 	}
+    // case 'while'
 	else if (token.type().equals(TokenType.While)){
+    s = whileStatement();
 	}	
-*/
+    else if (token.type().equals(TokenType.LeftBrace)){
+        match(TokenType.LeftBrace);
+        s = statements();
+        match(TokenType.RightBrace);
+    }
+    // also block
         // student exercise
         return s;
     }
@@ -136,11 +166,20 @@ private boolean checkType(){
 	// while (members.hasNext()){}
 	
         Block b = new Block();
-	while (token.type().equals(TokenType.Identifier)){
-	b.members.add(statement());
+	       while (isStatement()){
+	           b.members.add(statement());
 	}
         // student exercise
         return b;
+    }
+
+    private boolean isStatement (){
+        return
+        (token.type().equals(TokenType.Identifier))||
+        (token.type().equals(TokenType.Semicolon))||
+        (token.type().equals(TokenType.If))||
+        (token.type().equals(TokenType.While))||
+        (token.type().equals(TokenType.LeftBrace))   ;
     }
   
     private Assignment assignment () {
@@ -156,12 +195,26 @@ private boolean checkType(){
   
     private Conditional ifStatement () {
         // IfStatement --> if ( Expression ) Statement [ else Statement ]
-        return null;  // student exercise
+        match(TokenType.If);
+        match(TokenType.LeftParen);
+       
+        Expression e = expression();
+        match(TokenType.RightParen);
+
+        Statement thenBranch = statement();
+        match(TokenType.Else);
+        Statement elseBranch = statement ();
+        return new Conditional(e, thenBranch, elseBranch);  // student exercise
     }
   
     private Loop whileStatement () {
         // WhileStatement --> while ( Expression ) Statement
-        return null;  // student exercise
+        match(TokenType.While);
+        match(TokenType.LeftParen);
+        Expression test = expression();
+        match(TokenType.RightParen);
+        Statement body = statement();
+        return new Loop(test, body);  // student exercise
     }
 
     private Expression expression () {
@@ -172,7 +225,7 @@ private boolean checkType(){
 		Expression con2 = conjunction();
 		e = new Binary(op , e , con2);	
 	}
-	return e;  // student exercise
+	return e;  
     }
   
     private Expression conjunction () {
@@ -183,7 +236,7 @@ private boolean checkType(){
 		Expression equ2 = equality();
 		e = new Binary(op , e , equ2);	
 	}
-        return e;  // student exercise
+        return e;  
     }
   
     private Expression equality () {
@@ -195,7 +248,7 @@ private boolean checkType(){
 		Expression rel2 = relation();
 		e = new Binary(op , e , rel2);	
 	}
-        return e;  // student exercise
+        return e;  
     }
 
     private Expression relation (){
@@ -265,13 +318,31 @@ private boolean checkType(){
 
     private Value literal( ) {
 	Value v = null;
-//finished for ints
-	if (token.type().equals(TokenType.IntLiteral)){
+//finished for ints got to get other stuff..
+	if (token.type().equals(TokenType.Int)){
+    	int myVal = Integer.parseInt(token.value());	
+	    match(TokenType.IntLiteral);
+	    v = new IntValue (myVal);
+        }
+   else if (token.type().equals(TokenType.Char)){
+        char myVal = (token.value()).charAt(0);    
+        match(TokenType.CharLiteral);
+        v = new CharValue (myVal);
+        }
+    // hot to construct a bool val from a string
+   /* else if (token.type().equals(TokenType.Bool)){
+        boolean myVal = (token.value()).charAt(0);    
+        match(TokenType.Bool);
+        v = new BoolValue (myVal);
+        }*/
+    else if (token.type().equals(TokenType.Char)){
+        float myVal = Float.parseFloat(token.value());    
+        match(TokenType.FloatLiteral);
+        v = new FloatValue (myVal);
+        }
+
+
 	
-	int myVal = Integer.parseInt(token.value());	
-	match(TokenType.IntLiteral);
-	v = new IntValue (myVal);
-	}
         return v;  // student exercise
     }
   
