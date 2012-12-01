@@ -123,9 +123,9 @@ class Assignment extends Statement {
 		System.out.println("target: " + target);
 		super.display(level);
         //this code works for if the source is just a value
-        System.out.println("source: " + source);
+       // System.out.println("source: " + source);
         //this code works if the source is an expression
-        //source.display(level);
+        source.display(level);
 	}
 }
 

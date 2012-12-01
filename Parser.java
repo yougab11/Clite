@@ -319,12 +319,12 @@ private boolean checkType(){
     private Value literal( ) {
 	Value v = null;
 //finished for ints got to get other stuff..
-	if (token.type().equals(TokenType.Int)){
+	if (token.type().equals(TokenType.IntLiteral)){
     	int myVal = Integer.parseInt(token.value());	
 	    match(TokenType.IntLiteral);
 	    v = new IntValue (myVal);
         }
-   else if (token.type().equals(TokenType.Char)){
+   else if (token.type().equals(TokenType.CharLiteral)){
         char myVal = (token.value()).charAt(0);    
         match(TokenType.CharLiteral);
         v = new CharValue (myVal);
@@ -335,13 +335,11 @@ private boolean checkType(){
         match(TokenType.Bool);
         v = new BoolValue (myVal);
         }*/
-    else if (token.type().equals(TokenType.Char)){
+    else if (token.type().equals(TokenType.FloatLiteral)){
         float myVal = Float.parseFloat(token.value());    
         match(TokenType.FloatLiteral);
         v = new FloatValue (myVal);
         }
-
-
 	
         return v;  // student exercise
     }
