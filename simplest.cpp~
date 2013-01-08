@@ -3,7 +3,7 @@ int a , c;
 bool z;
 char n, m;
 float d	, q;
-
+int f , g;
 a = 5;
 //a =  + 5;
 //g = c + d;

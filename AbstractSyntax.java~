@@ -244,7 +244,7 @@ abstract class Value extends Expression {
         if (type == Type.FLOAT) return new FloatValue( );
         throw new IllegalArgumentException("Illegal type in mkValue");
     }
-
+//nothing good here need this to return a value i think... or something...
 	 void display(int level){
         	super.display(level);
 		System.out.println (this);
